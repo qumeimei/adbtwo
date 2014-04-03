@@ -4,30 +4,33 @@ from pprint import pprint
 from util import *
 
 
-class Question:
-	global CONFINE
-	CONFINE = [
+CONFINE = [
 		'/book/author/works_written',
 		'/book/author',
 		'/organization/organization_founder/organizations_founded',
 		'/organization/organization_founder'
-	]
-	global IDENTITY
-	IDENTITY = [
+]
+
+IDENTITY = [
 		' (as Author) created ',
 		' (as Businessperson) created ',
-	]
+]
+
+class Question:
 	
 	def __init__(self, api_key):
 		self.api_key = api_key
 	
-<<<<<<< HEAD
-	def run(self, query):
+	def run(self, query, single = True):
+		if single:
+			print 'Let me see...'
+		else:
+			print 'Query-Question: ' + query
 		
-		#api_key = open('.api_key').read()
-		question=query
-		print 'Query_Question: '+question
 		print '\n\n'
+		#api_key = open('.api_key').read()
+		question=query.strip()
+
 		query1=question.strip()
 		query1 = ' '.join(question.split()[2:])
 		suffix="?"
@@ -110,15 +113,3 @@ class Question:
 	def prt(self,nu1,nu2,nu3):
 		return  '	|'+formatLine(' '+nu1, 20, single = True)+'|'+formatLine(nu2, 39, single = True)+'| '+formatLine(nu3, 39, single = True)+'|'+'\n'
 	
-	
-		
-
-	
-=======
-	def run(self, query, single = True):
-		query = query.strip()
-		if single:
-			print 'Let me see...'
-		else:
-			print 'Query-Question: ' + query
->>>>>>> 3ceef24c63cf623b7a7994c6530f9ef3e074423a
