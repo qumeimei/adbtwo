@@ -504,7 +504,7 @@ class QueryItem:
 					print breakline
 
 class Infobox:
-	def __init__(self, api_key = 'AIzaSyD-DxMBEDLEzKmCW5yWoyJ8gbMUO0_bXuY'):
+	def __init__(self, api_key):
 		self.api_key = api_key
 
 	def __search(self, query):

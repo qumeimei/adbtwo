@@ -20,7 +20,7 @@ def getContent(propmap, first, seconds = None, field = 'text'):
 	if first in propmap:	
 		for value in propmap[first]['values']:
 			if propmap[first]['valuetype'] != 'compound':
-				res.append(value[field])
+				res.append(value[field].encode('utf-8'))
 			
 			else:
 				# keys must not be None
