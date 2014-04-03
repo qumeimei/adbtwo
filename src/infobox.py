@@ -542,8 +542,7 @@ class Infobox:
 			print 'Query-Question: ' + query
 		mids = self.__search(query)
 		if not mids:
-			print 'No related information about query [' + query + '] was found!'
-			print ''
+			print 'No related information about query [' + query + '] was found!\n'
 			return
 	
 		response = []
@@ -570,8 +569,7 @@ class Infobox:
 			time.sleep(0.1)
 	
 		if not types:
-			print 'No related information about query [' + query + '] was found!'
-			print ''
+			print 'No related information about query [' + query + '] was found!\n'
 			return
 	
 		# retrieve and store information

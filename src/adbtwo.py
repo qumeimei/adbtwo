@@ -34,14 +34,21 @@ if args.t is None:
 	print '| ' + len2 + ' ' * (max_len - len(len2)) + '|'
 	print '| ' + len3 + ' ' * (max_len - len(len3)) + '|'
 	print ' ' + '-' * (max_len + 1)
-	while True:
-		print ''
-		prompt = '[' + time.strftime('%H:%M:%S', time.localtime()) + '] ' + os.getlogin() + '@' + socket.gethostname() + '> '
-		query = raw_input(prompt)
-		if re.match('^who created .*', query.lower()) is None:
-			info.run(query)
-		else:
-			ques.run(query)
+	try:
+		while True:
+			print ''
+			prompt = '[' + time.strftime('%H:%M:%S', time.localtime()) + '] ' + os.getlogin() + '@' + socket.gethostname() + '> '
+			query = raw_input(prompt)
+			if re.match('^who created .*', query.lower()) is None:
+				info.run(query)
+			else:
+				ques.run(query)
+
+	except KeyboardInterrupt:
+		print '\nGoodbye!\n  ^_^'
+
+	except Exception:
+		print 'Oooops...something wrong'
 
 	sys.exit(0)
 
@@ -67,8 +74,7 @@ if args.t[0].lower() == 'infobox':
 			line = f.readline()
 			if re.match('\\s+' , line):
 				print 'Query-Question:'
-				print 'Hmm! Empty query! (-_-)'
-				print ''
+				print 'Hmm! Empty query! (-_-)\n'
 				continue
 			if not line:
 				break
@@ -94,8 +100,7 @@ if args.t[0].lower() == 'question':
 			line = f.readline()
 			if re.match('\\s+' , line):
 				print 'Query-Question:'
-				print 'Hmm! Empty query! (-_-)'
-				print ''
+				print 'Hmm! Empty query! (-_-)\n'
 				continue
 			if not line:
 				break
