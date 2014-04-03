@@ -21,6 +21,7 @@ class Question:
 	def __init__(self, api_key):
 		self.api_key = api_key
 	
+<<<<<<< HEAD
 	def run(self, query):
 		
 		#api_key = open('.api_key').read()
@@ -113,3 +114,11 @@ class Question:
 		
 
 	
+=======
+	def run(self, query, single = True):
+		query = query.strip()
+		if single:
+			print 'Let me see...'
+		else:
+			print 'Query-Question: ' + query
+>>>>>>> 3ceef24c63cf623b7a7994c6530f9ef3e074423a

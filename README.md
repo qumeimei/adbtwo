@@ -49,7 +49,7 @@ we defined the queries separately as followings:
 
 For the names we got by 1, we labelled as (as Author) and for those from 2, we labelled as (as Businessperson).
 We mapped names and their book or established institution using a hashMap with one key multiple values, and print 
-them alphabetically.
+the authors' name alphabetically.
 The following is the table we used to map from Freebase properties to the entities of interest that we return.
 
 Freebase property	                                           Entity property
