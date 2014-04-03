@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # map freebase type to project type
 FREEBASEMAP = {
 	'/people/person': 'PERSON',

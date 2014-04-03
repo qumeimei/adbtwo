@@ -2,7 +2,6 @@
 
 import json
 import urllib
-import sys
 import time
 from util import *
 
@@ -11,6 +10,7 @@ class QueryItem:
 	def __init__(self, types, response):
 		self.res = response
 		self.result = {}
+		self.name = ', '.join(getContent(self.res, '/type/object/name'))
 
 		# order of item types
 		self.typeOrder = {
@@ -68,7 +68,6 @@ class QueryItem:
 	# common properties
 	def __setName(self, itype):
 		self.result[itype]['Name'] = ', '.join(getContent(self.res, '/type/object/name'))
-		self.name = self.result[itype]['Name']
 
 	def __setDes(self, itype):
 		des = getContent(self.res, '/common/topic/description', None, 'value')
@@ -237,7 +236,7 @@ class QueryItem:
 	def __stOrder(self, x):
 		return self.attrOrder['SPORTS_TEAM'][x]
 
-	def output(self, width = 100):
+	def output(self, width = 120):
 		# sort types
 		sorted_types = sorted(self.result.keys(), key=self.__typeOrder)
 		
@@ -504,59 +503,70 @@ class QueryItem:
 
 					print breakline
 
-def search(query, api_key):
-	service_url = 'https://www.googleapis.com/freebase/v1/search'
-	params = {
-		'query': query,
-		'key': api_key
-	}
-	url = service_url + '?' + urllib.urlencode(params)
-	response = json.loads(urllib.urlopen(url).read())
-	return [result['mid'] for result in response['result']]
+class Infobox:
+	def __init__(self, api_key = 'AIzaSyD-DxMBEDLEzKmCW5yWoyJ8gbMUO0_bXuY'):
+		self.api_key = api_key
 
-def topic(topic_id, api_key):
-	service_url = 'https://www.googleapis.com/freebase/v1/topic'
-	params = {
-		'key': api_key
-	}
-	url = service_url + topic_id + '?' + urllib.urlencode(params)
-	return json.loads(urllib.urlopen(url).read())['property']
-
-def filtertype(response):
-	res = []
-	for value in response['/type/object/type']['values']:
-		if (value['id'] in FREEBASEMAP.keys()) and (value['id'] not in res):
-			res.append(value['id'])
-	return res
-
-def run(query = 'bill gates', api_key = 'AIzaSyD-DxMBEDLEzKmCW5yWoyJ8gbMUO0_bXuY'):
-	mids = search(query.strip(), api_key)
-	if not mids:
-		print 'No related information about query [' + query + '] was found!'
-		sys.exit(0)
-
-	response = []
-	types = []
-	for i, mid in enumerate(mids):
-		response = topic(mid, api_key)
-		types = filtertype(response)
-		if types:
-			break
-
-		else:
-			j = i + 1
-			if j % 5 == 0:
-				print j + ' Search API result entries were considered. None of them of a supported type.'
+	def __search(self, query):
+		service_url = 'https://www.googleapis.com/freebase/v1/search'
+		params = {
+			'query': query,
+			'key': self.api_key
+		}
+		url = service_url + '?' + urllib.urlencode(params)
+		response = json.loads(urllib.urlopen(url).read())
+		return [result['mid'] for result in response['result']]
 	
-		# guarantee not execeed the limit per second
-		time.sleep(0.1)
-
-	if not types:
-		print 'None of the Search API results of a supported type.'
-		sys.exit(0)
-
-	# retrieve and store information
-	item = QueryItem(types, response)
-	item.output()
-
-run()
+	def __topic(self, topic_id):
+		service_url = 'https://www.googleapis.com/freebase/v1/topic'
+		params = {
+			'key': self.api_key
+		}
+		url = service_url + topic_id + '?' + urllib.urlencode(params)
+		return json.loads(urllib.urlopen(url).read())['property']
+	
+	def __filtertype(self, response):
+		res = []
+		for value in response['/type/object/type']['values']:
+			if (value['id'] in FREEBASEMAP.keys()) and (value['id'] not in res):
+				res.append(value['id'])
+		return res
+	
+	def run(self, query, single = True):
+		query = query.strip()
+		if single:
+			print 'Let me see...'
+		else:
+			print 'Query-Question: ' + query
+		mids = self.__search(query)
+		if not mids:
+			print 'No related information about query [' + query + '] was found!'
+			print ''
+			return
+	
+		response = []
+		types = []
+		for i, mid in enumerate(mids):
+			response = self.__topic(mid)
+			types = self.__filtertype(response)
+			if types:
+				break
+	
+			else:
+				j = i + 1
+				if j % 5 == 0:
+					print str(j) + ' Search API result entries were considered. None of them of a supported type.'
+		
+			# guarantee not execeed the limit per second
+			time.sleep(0.1)
+	
+		if not types:
+			print 'No related information about query [' + query + '] was found!'
+			print ''
+			return
+	
+		# retrieve and store information
+		item = QueryItem(types, response)
+		# print the infobox
+		item.output()
+		print ''
