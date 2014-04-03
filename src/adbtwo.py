@@ -70,17 +70,26 @@ if args.t[0].lower() == 'infobox':
 			sys.exit(1)
 
 		f = open(args.f[0], 'r')
-		while True:
-			line = f.readline()
-			if re.match('\\s+' , line):
-				print 'Query-Question:'
-				print 'Hmm! Empty query! (-_-)\n'
-				continue
-			if not line:
-				break
-			query = line[:-1]
-			info.run(query, False)
+		try:
+			while True:
+				line = f.readline()
+				if re.match('\\s+' , line):
+					print 'Query-Question:'
+					print 'Hmm! Empty query! (-_-)\n'
+					continue
+				if not line:
+					break
+				query = line[:-1]
+				info.run(query, False)
+
+		except KeyboardInterrupt:
+			print '\nGoodbye!\n  ^_^'
+
+		except Exception:
+			print 'Oooops...something wrong'
+
 		f.close()
+		sys.exit(0)
 
 if args.t[0].lower() == 'question':
 	if (args.q is None and args.f is None) or (args.q is not None and args.f is not None):
@@ -96,14 +105,23 @@ if args.t[0].lower() == 'question':
 			sys.exit(1)
 
 		f = open(args.f[0], 'r')
-		while True:
-			line = f.readline()
-			if re.match('\\s+' , line):
-				print 'Query-Question:'
-				print 'Hmm! Empty query! (-_-)\n'
-				continue
-			if not line:
-				break
-			query = line[:-1]
-			ques.run(query, False)
+		try:
+			while True:
+				line = f.readline()
+				if re.match('\\s+' , line):
+					print 'Query-Question:'
+					print 'Hmm! Empty query! (-_-)\n'
+					continue
+				if not line:
+					break
+				query = line[:-1]
+				ques.run(query, False)
+
+		except KeyboardInterrupt:
+			print '\nGoodbye!\n  ^_^'
+
+		except Exception:
+			print 'Oooops...something wrong'
+
 		f.close()
+		sys.exit(0)
