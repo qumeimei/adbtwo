@@ -83,7 +83,7 @@ def main():
 			y+=1
 	print str
 	
-	x=1
+	'''x=1
 	for key in sorted(dict2.iterkeys()):
 		str=key
 		z=1
@@ -98,6 +98,7 @@ def main():
 			z+=1
 		print "%d"  %(x)+'. ' +str
 		x+=1
+		'''
 
 	
 main()
