@@ -1,1 +1,204 @@
-README.md
+E6111 Advanced Database Systems - Project2
+
+Team Member
+-----------
+Yu		Zheng	(yz2583)
+Jingyi	Guo		(jg3421)
+
+
+Files
+-----
+README						- this file
+transcript_infobox.txt		-
+transcript_question.txt		-
+src\run.sh					- run the program
+src\adbtwo.py				- interface of the program
+src\infobox.py				- create infobox
+src\question.py				- answer questions
+src\util.py					- common utilities
+
+
+How to run
+----------
+1. Move to src directory:
+	$ cd src
+2. Add execution permission to run.sh in case you don't have:
+	$ chmod +x run.sh
+3. There are four ways to run the program. 
+	(1) ./run.sh -key <Freebase API key> -q <query> -t <infobox|question>
+	(2) ./run.sh -key <Freebase API key> -f <file of queries> -t <infobox|question>
+	(3) ./run.sh -key <Freebase API key>
+	(4) ./run.sh
+
+	Note: 
+		(1) and (2) run in explicit mode.
+		(3) and (4) run in interactive mode.
+		(4) uses the default API key.
+
+
+Internal Design
+---------------
+
+* Extract Value
+
+We treate all actual values as string and encode using utf-8.
+And we use 'text' as the actual value, excpet for 'Description', which uses 'value'.
+util.getContent extracts values from freebase results and stores in a list: ['Libby Gates', 'Kristi Gates'].
+If the required value type is "compound", then it retrieves the corresponding information and stores as a three
+dimension list:[[['organization1'], ['role1'], ['title1'], ['from1'], ['to1']], [['organization2'], ['role2'],
+['title2], ['from2'], ['to2']]]. We remove the 'empty' two-dimension list: [[],[]].
+
+* Type and Property
+
+In our desing, there are three basic types, Person, League, and SportsTeam.
+Only Person has sub types: Author, Actor, and BusinessPerson.
+A entity can only be one of the three basic types.
+A Person entity can have none, one or multiple sub types of Person.
+Each type (basic and sub type) has its corresponding specific properties.
+Name and Description are common properties that all the three basic types have.
+
+ -------------------------------------------------------------------------------------------------------------------
+| Freebase Property					| Property of interest						| Comments							|
+ -------------------------------------------------------------------------------------------------------------------
+| Person.Name						| /type/object/name							| a name string						|
+ -------------------------------------------------------------------------------------------------------------------
+| Person.Description				| /common/topic/description					| 									|
+ -------------------------------------------------------------------------------------------------------------------
+| Person.Birthday					| /people/person/date_of_birth				|
+ -------------------------------------------------------------------------------------------------------------------
+| Person.PlaceOfBirth				| /people/person/place_of_birth				|
+ -------------------------------------------------------------------------------------------------------------------
+| Person.Death						| /people/deceased_person/place_of_death	|
+|									| /people/deceased_person/date_of_death		|
+|									| /people/deceased_person/cause_of_death	|
+ -------------------------------------------------------------------------------------------------------------------
+| Person.Siblings					| /people/person/sibling_s					|
+|									| /people/sibling_relationship/sibling		|
+ -------------------------------------------------------------------------------------------------------------------
+| Person.Spouses					| /people/person/spouse_s					|
+|									| /people/marriage/spouse					|
+|									| /people/marriage/from						|
+|									| /people/marriage/to						|
+|									| /people/marriage/location_of_ceremony		|
+ -------------------------------------------------------------------------------------------------------------------
+| Author.Books						| /book/author/works_written				|
+ -------------------------------------------------------------------------------------------------------------------
+| Author.BooksAbout					| /book/book_subject/works					|
+ -------------------------------------------------------------------------------------------------------------------
+| Author.Influenced					| /influence/influence_node/influenced		|
+ -------------------------------------------------------------------------------------------------------------------
+| Author.InfluencedBy				| /influence/influence_node/influenced_by	|
+ -------------------------------------------------------------------------------------------------------------------
+| Actor.Films						| /film/actor/film							|
+|									| /film/performance/film					|
+|									| /film/performance/character				|
+ -------------------------------------------------------------------------------------------------------------------
+| BusinessPerson.Name				| /type/object/name							|
+ -------------------------------------------------------------------------------------------------------------------
+| BusinessPerson.Description		| /common/topic/description					|									
+ -------------------------------------------------------------------------------------------------------------------
+| BusinessPerson.Leadership			| /business/board_member/leader_of			|
+|									| /organization/leadership/organization		|
+|									| /organization/leadership/role				|
+|									| /organization/leadership/title			|
+|									| /organization/leadership/from				|
+|									| /organization/leadership/to				|
+ -------------------------------------------------------------------------------------------------------------------
+| BusinessPerson.BoardMember		| /business/board_member/organization_board_memberships		|
+|									| /organization/organization_board_membership/organization	|
+|									| /organization/organization_board_membership/role			|
+|									| /organization/organization_board_membership/title			|
+|									| /organization/organization_board_membership/from			|
+|									| /organization/organization_board_membership/to			|
+ -------------------------------------------------------------------------------------------------------------------
+| BusinessPerson.Founded			| /organization/organization_founder/organizations_founded	|
+ -------------------------------------------------------------------------------------------------------------------
+| League.Name						| /type/object/name							|
+ -------------------------------------------------------------------------------------------------------------------
+| League.Description				| /common/topic/description					|									
+ -------------------------------------------------------------------------------------------------------------------
+| League.Sport						| /sports/sports_league/sport				|
+ -------------------------------------------------------------------------------------------------------------------
+| League.Slogan						| /organization/organization/slogan			|
+ -------------------------------------------------------------------------------------------------------------------
+| League.Championship				| /sports/sports_league/championship		|
+ -------------------------------------------------------------------------------------------------------------------
+| League.OfficialWebsite			| /common/topic/official_website			|
+ -------------------------------------------------------------------------------------------------------------------
+| League.Teams						| /sports/sports_league/teams				|
+|									| /sports/sports_league_participation/team	|
+ -------------------------------------------------------------------------------------------------------------------
+| SportsTeam.Name					| /type/object/name							|
+ -------------------------------------------------------------------------------------------------------------------
+| SportsTeam.Description			| /common/topic/description					|									
+ -------------------------------------------------------------------------------------------------------------------
+| SportsTeam.Sport					| /sports/sports_team/sport					|
+ -------------------------------------------------------------------------------------------------------------------
+| SportsTeam.Arena					| /sports/sports_team/arena_stadium			|
+ -------------------------------------------------------------------------------------------------------------------
+| SportsTeam.Founded				| /sports/sports_team/founded				|
+ -------------------------------------------------------------------------------------------------------------------
+| SportsTeam.Locations				| /sports/sports_team/location				|
+ -------------------------------------------------------------------------------------------------------------------
+| SportsTeam.Championships			| /sports/sports_team/championships			|
+ -------------------------------------------------------------------------------------------------------------------
+| SportsTeam.Leagues				| /sports/sports_team/league				|
+|									| /sports/sports_league_participation/league|
+ -------------------------------------------------------------------------------------------------------------------
+| SportsTeam.Coaches				| /sports/sports_team/coaches				|
+|									| /sports/sports_team_coach_tenure/coach	|
+|									| /sports/sports_team_coach_tenure/position	|
+|									| /sports/sports_team_coach_tenure/from		|
+|									| /sports/sports_team_coach_tenure/to		|
+ -------------------------------------------------------------------------------------------------------------------
+| SportsTeam.PlayersRoster			| /sports/sports_team/roster				|
+|									| /sports/sports_team_roster/player			|
+|									| /sports/sports_team_roster/number			|
+|									| /sports/sports_team_roster/position		|
+|									| /sports/sports_team_roster/from			|
+|									| /sports/sports_team_roster/to				|
+ -------------------------------------------------------------------------------------------------------------------
+
+
+In the part 2, 
+we use MQLRead API to send MQL queries to Freebase. In the question of "Who created [x]",
+we defined the queries separately as followings:
+1. [{
+	"/book/author/works_written": [{
+		"a:name": null,
+		"name~=": "[x]"
+	}],
+	"id": null,
+	"name": null,
+	"type": "/book/author"
+}]
+2. [{
+	"/organization/organization_founder/organizations_founded": [{
+		"a:name": null,
+		"name~=": "[x]"
+	}],
+	"id": null,
+	"name": null,
+	"/organization/organization_founder"
+}]
+
+For the names we got by 1, we labelled as (as Author) and for those from 2, we labelled as (as Businessperson).
+We mapped names and their book or established institution using a hashMap with one key multiple values, and print 
+them alphabetically.
+The following is the table we used to map from Freebase properties to the entities of interest that we return.
+
+Freebase property	                                           Entity property
+/book/author/works_written	                                      as Author
+/book/author	
+/organization/organization_founder/organizations_founded	  as Businessperson
+/organization/organization_founder
+
+
+Freebase API Key and Limit
+--------------------------
+Freebase API Key: 				AIzaSyD-DxMBEDLEzKmCW5yWoyJ8gbMUO0_bXuY
+Requests per second per user:	10
+
+
+Test
+----

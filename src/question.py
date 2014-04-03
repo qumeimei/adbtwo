@@ -8,3 +8,5 @@ class Question:
 			print 'Let me see...'
 		else:
 			print 'Query-Question: ' + query
+		
+		# answer question
