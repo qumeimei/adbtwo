@@ -44,24 +44,26 @@ class QueryItem:
 		flag2 = True
 		flag3 = True
 		for atype in types:
+			# three basic types
 			if FREEBASEMAP[atype] == 'PERSON':
 				self.__setPerson()
-				continue
-			if FREEBASEMAP[atype] == 'AUTHOR':
-				self.__setAuthor()
-				continue
-			if FREEBASEMAP[atype] == 'ACTOR' and flag1:
-				self.__setActor()
-				flag1 = False
-				continue
-			if FREEBASEMAP[atype] == 'BUSINESS_PERSON' and flag2:
-				self.__setBusinessPerson()
-				flag2 = False
-				continue
-			if FREEBASEMAP[atype] == 'LEAGUE':
+				# PERSON's sub types
+				for subtype in types:
+					if FREEBASEMAP[subtype] == 'AUTHOR':
+						self.__setAuthor()
+
+					elif FREEBASEMAP[subtype] == 'ACTOR' and flag1:
+						self.__setActor()
+						flag1 = False
+
+					elif FREEBASEMAP[subtype] == 'BUSINESS_PERSON' and flag2:
+						self.__setBusinessPerson()
+						flag2 = False
+
+ 			elif FREEBASEMAP[atype] == 'LEAGUE':
 				self.__setLeague()
-				continue
-			if FREEBASEMAP[atype] == 'SPORTS_TEAM' and flag3:
+
+			elif FREEBASEMAP[atype] == 'SPORTS_TEAM' and flag3:
 				self.__setSportsTeam()
 				flag3 = False
 
@@ -210,7 +212,7 @@ class QueryItem:
 		self.result[itype]['Coaches'] = getContent(self.res, '/sports/sports_team/coaches', \
 			['/sports/sports_team_coach_tenure/coach', '/sports/sports_team_coach_tenure/position', \
 			'/sports/sports_team_coach_tenure/from', '/sports/sports_team_coach_tenure/to'])
-		self.result[itype]['PlayersRoster'] = getContent(response, '/sports/sports_team/roster', \
+		self.result[itype]['PlayersRoster'] = getContent(self.res, '/sports/sports_team/roster', \
 			['/sports/sports_team_roster/player', '/sports/sports_team_roster/number', '/sports/sports_team_roster/position', \
 			'/sports/sports_team_roster/from', '/sports/sports_team_roster/to'])
 
@@ -549,7 +551,14 @@ class Infobox:
 		for i, mid in enumerate(mids):
 			response = self.__topic(mid)
 			types = self.__filtertype(response)
-			if types:
+			basictypes = ['/people/person', '/sports/sports_league', '/sports/sports_team', '/sports/professional_sports_team']
+			stop = False
+			for basic in basictypes:
+				if basic in types:
+					stop = True
+					break
+
+			if stop:
 				break
 	
 			else:
