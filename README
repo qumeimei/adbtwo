@@ -212,17 +212,17 @@ We mapped names and their book or established institution using a hashMap with o
 them alphabetically.
 The following is the table we used to map from Freebase properties to the entities of interest that we return.
 * Map Table
----------------------------------------------------------------------------------------------------------------------------------------------------------------
-| Freebase Property					| Property of interest						| Comments																		|
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------
-| 		Author.Name					| /book/author								| I used the "name" tag (string format) from the entry							|		
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------
-| 		Author.Books				| /book/author/works_written				|  All "a:name" tag from the array of values were used 							|
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------
-| 		BusinessPerson.Name			| /organization/organization_founder/organizations_founded	|  The "name" tag (string format) was used from the entry		|                
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------
-| 		BusinessPerson.Founded		| /organization/organization_founder		|	All "a:name" tags from the array of values were used 						|
- ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------
+| Freebase Property		| Property of interest										| Comments												|
+ -------------------------------------------------------------------------------------------------------------------------------------------
+| Author.Name			| /book/author												| I used the "name" tag (string format) from the entry	|		
+ -------------------------------------------------------------------------------------------------------------------------------------------
+| Author.Books			| /book/author/works_written								| All "a:name" tag from the array of values were used 	|
+ -------------------------------------------------------------------------------------------------------------------------------------------
+| BusinessPerson.Name	| /organization/organization_founder/organizations_founded	| The "name" tag (string format) was used from the entry|                
+ -------------------------------------------------------------------------------------------------------------------------------------------
+| BusinessPerson.Founded| /organization/organization_founder						| All "a:name" tags from the array of values were used 	|
+ -------------------------------------------------------------------------------------------------------------------------------------------
 
 
 Freebase API Key and Limit
@@ -233,5 +233,5 @@ Requests per second per user:	10
 
 Test
 ----
-We used linux's dictwords as query to test our progrom at CLIC machine.
+We used linux's dictwords as query to test our program at CLIC machine.
 It worked nicely.
