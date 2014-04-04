@@ -227,5 +227,5 @@ Requests per second per user:	10
 
 Test
 ----
-We used linux's dict as query to test our progrom at CLIC machine.
+We used linux's dictwords as query to test our progrom at CLIC machine.
 It worked nicely.
