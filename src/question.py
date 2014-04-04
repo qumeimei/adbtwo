@@ -14,7 +14,8 @@ IDENTITY = [
 		' (as Author) created ',
 		' (as Businessperson) created ',
 ]
-
+sll=105
+sl=sll-4
 class Question:
 	
 	def __init__(self, api_key):
@@ -41,10 +42,8 @@ class Question:
 			dict2=que.mqlread(dict1,query1,CONFINE[2],CONFINE[3])
 		
 		
-		sl=101
-		sll=sl+4
 		str=que.pl(sll,1)
-		str +='	|'+' '*((sll-len(question))/2)+question+' '*((sll-len(question))/2)+' |'+'\n'
+		str +='	|'+' '*((sll-len(question))/2)+question+' '*(sll-(sll-len(question))/2-len(question))+'|'+'\n'
 		
 		
 		word_max=0
@@ -74,7 +73,9 @@ class Question:
 					
 			else:
 				str +=que.pl(sll,1)
+				#
 				str+=que.prt(key1,'As','Creation',word_max,(sl-word_max)/2)
+				#
 				str+='	|'+que.stl(word_max+2,sl-word_max+2)
 				y=1
 				for num in dict2[key]:
@@ -83,9 +84,7 @@ class Question:
 					else:
 						str+=que.prt(' ',' ',num,word_max,(sl-word_max)/2)	
 					y+=1
-				'''if y==len(dict2[key]):
-					str +=que.pl(sll,1)
-					'''
+			
 			x+=1
 		str +=que.pl(sll,1)	
 		print str
@@ -117,4 +116,4 @@ class Question:
 	def stl(self,before,after):
 		return ' '*before+formatLine("-"*after, after, single = True)+'\n'
 	def prt(self,nu1,nu2,nu3,num4,num5):
-		return  '	|'+formatLine(' '+nu1, num4+2, single = True)+'|'+formatLine(nu2, num5, single = True)+'| '+formatLine(nu3, num5, single = True)+'|'+'\n'
+		return  '	|'+formatLine(' '+nu1, num4+2, single = True)+'|'+formatLine(nu2, num5, single = True)+'|'+formatLine(nu3, sll-num5-num4-4, single = True)+'|'+'\n'
