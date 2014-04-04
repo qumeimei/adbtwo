@@ -1,6 +1,8 @@
 import json
 import urllib
 from util import *
+import sys
+
 
 
 CONFINE = [
@@ -22,6 +24,8 @@ class Question:
 		self.api_key = api_key
 	
 	def run(self, query, single = True):
+		reload(sys)
+		sys.setdefaultencoding('utf-8')
 		if single:
 			print 'Let me see...'
 		else:
@@ -88,7 +92,6 @@ class Question:
 			x+=1
 		str +=que.pl(sll,1)	
 		print str
-	
 	def mqlread(self, bus_dict,key_word,confine_word,confine):
 	
 		service_url = 'https://www.googleapis.com/freebase/v1/mqlread'
