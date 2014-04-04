@@ -91,7 +91,7 @@ class Question:
 			
 			x+=1
 		str +=que.pl(sll,1)	
-		print str
+		print str.encode('utf-8')
 	def mqlread(self, bus_dict,key_word,confine_word,confine):
 	
 		service_url = 'https://www.googleapis.com/freebase/v1/mqlread'
