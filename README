@@ -36,11 +36,11 @@ How to run
 		(4) uses the default API key.
 
 
-Internal Design
+Internal Design(Part 1)
 ---------------
 * Extract Value
-We treate all actual values as string and encode using utf-8.
-And we use 'text' as the actual value, excpet for 'Description', which uses 'value'.
+We treat all actual values as string and encode using utf-8.
+And we use 'text' as the actual value, except for 'Description', which uses 'value'.
 util.getContent extracts values from freebase results and stores in a list: ['Libby Gates', 'Kristi Gates'].
 If the required value type is "compound", then it retrieves the corresponding information and stores as a three
 dimensional list:[[['organization1'], ['role1'], ['title1'], ['from1'], ['to1']], [['organization2'], ['role2'],
@@ -62,7 +62,7 @@ The header line is formed as 'entity name + (entity types)'. Only 'Person' is no
 Then print each formatted non-empty property.
 
 * Type and Property
-In our desing, there are three basic types, Person, League, and SportsTeam.
+In our design, there are three basic types, Person, League, and SportsTeam.
 Only Person has sub types: Author, Actor, and BusinessPerson.
 A entity can only be one of the three basic types.
 A Person entity can have none, one or multiple sub types of Person.
@@ -183,9 +183,9 @@ this information.
 |									| /sports/sports_team_roster/to				|									|
  -------------------------------------------------------------------------------------------------------------------
 
-
-
-In the part 2, 
+Internal Design(Part 2)
+---------------
+* Extract Value 
 we use MQLRead API to send MQL queries to Freebase. In the question of "Who created [x]",
 we defined the queries separately as followings:
 1. [{
@@ -207,16 +207,22 @@ we defined the queries separately as followings:
 	"/organization/organization_founder"
 }]
 
-For the names we got by 1, we labelled as (as Author) and for those from 2, we labelled as (as Businessperson).
+For the names we got by MQL1, we labelled as (as Author) and for those from MQL2, we labelled as (as Businessperson).
 We mapped names and their book or established institution using a hashMap with one key multiple values, and print 
 them alphabetically.
 The following is the table we used to map from Freebase properties to the entities of interest that we return.
-
-Freebase property	                                           Entity property
-/book/author/works_written	                                      as Author
-/book/author	
-/organization/organization_founder/organizations_founded	  as Businessperson
-/organization/organization_founder
+* Map Table
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Freebase Property					| Property of interest						| Comments																		|
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+| 		Author.Name					| /book/author								| I used the "name" tag (string format) from the entry							|		
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+| 		Author.Books				| /book/author/works_written				|  All "a:name" tag from the array of values were used 							|
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+| 		BusinessPerson.Name			| /organization/organization_founder/organizations_founded	|  The "name" tag (string format) was used from the entry		|                
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------
+| 		BusinessPerson.Founded		| /organization/organization_founder		|	All "a:name" tags from the array of values were used 						|
+ ---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 Freebase API Key and Limit
@@ -227,5 +233,5 @@ Requests per second per user:	10
 
 Test
 ----
-We used linux's dict as query to test our progrom at CLIC machine.
+We used linux's dict as query to test our program at CLIC machine.
 It worked nicely.
