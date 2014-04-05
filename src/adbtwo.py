@@ -47,9 +47,6 @@ if args.t is None:
 	except KeyboardInterrupt:
 		print '\nGoodbye!\n  ^_^'
 
-	except Exception:
-		print 'Oooops...something wrong'
-
 	sys.exit(0)
 
 if args.t[0].lower() != 'infobox' and args.t[0].lower() != 'question':

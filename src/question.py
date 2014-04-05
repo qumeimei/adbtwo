@@ -17,6 +17,11 @@ IDENTITY = [
 ]
 sll=105
 sl=sll-4
+
+class FreebaseError(Exception):
+	def __init__(self, value):
+		self.value = value
+
 class Question:
 	
 	def __init__(self, api_key):
@@ -42,13 +47,17 @@ class Question:
 
 		content = ' '.join(question.split()[2:])
 		bus_dict=dict()
-		dict1=self.mqlread(bus_dict,content,CONFINE[0],CONFINE[1])
-		dict2=self.mqlread(dict1,content,CONFINE[2],CONFINE[3])
+		try:
+			dict1=self.mqlread(bus_dict,content,CONFINE[0],CONFINE[1])
+			dict2=self.mqlread(dict1,content,CONFINE[2],CONFINE[3])
+		except FreebaseError as e:
+			print e.value
+			return
 		
-		question += '?'
-		str=self.pl(sll,1)
-		str +='	|'+' '*((sll-len(question))/2)+ question +' '*(sll-(sll-len(question))/2-len(question))+'|'+'\n'
-		
+		question = 'Who created ' + content + '?'
+		strd=self.pl(sll,1)
+		strd +='	|'+' '*((sll-len(question))/2)+ question +' '*(sll-(sll-len(question))/2-len(question))+'|'+'\n'
+
 		word_max=0
 		names=[]
 		for key in sorted(dict2.iterkeys()):
@@ -67,28 +76,29 @@ class Question:
 				y=1
 				for num in dict2[key]:
 					if y==1:
-						str+=self.prt(' ',typ,num,word_max,(sl-word_max)/2)
+						strd+=self.prt(' ',typ,num,word_max,(sl-word_max)/2)
 					else:
-						str+=self.prt(' ',' ',num,word_max,(sl-word_max)/2)	
+						strd+=self.prt(' ',' ',num,word_max,(sl-word_max)/2)	
 					y+=1
 					
 			else:
-				str +=self.pl(sll,1)
+				strd +=self.pl(sll,1)
 				#
-				str+=self.prt(key1,'As','Creation',word_max,(sl-word_max)/2)
+				strd+=self.prt(key1,'As','Creation',word_max,(sl-word_max)/2)
 				#
-				str+='	|'+self.stl(word_max+2,sl-word_max+2)
+				strd+='	|'+self.stl(word_max+2,sl-word_max+2)
 				y=1
 				for num in dict2[key]:
 					if y==1:
-						str+=self.prt(' ',typ,num,word_max,(sl-word_max)/2)
+						strd+=self.prt(' ',typ,num,word_max,(sl-word_max)/2)
 					else:
-						str+=self.prt(' ',' ',num,word_max,(sl-word_max)/2)	
+						strd+=self.prt(' ',' ',num,word_max,(sl-word_max)/2)	
 					y+=1
 			
 			x+=1
-		str +=self.pl(sll,1)	
-		print str.encode('utf-8')
+
+		strd +=self.pl(sll,1)	
+		print strd.encode('utf-8')
 
 	def mqlread(self, bus_dict,key_word,confine_word,confine):
 		service_url = 'https://www.googleapis.com/freebase/v1/mqlread'
@@ -100,11 +110,17 @@ class Question:
 		url = service_url + '?' + urllib.urlencode(params)
 		response = json.loads(urllib.urlopen(url).read())
 
-		if len (bus_dict)==0:
+		if len(bus_dict)==0:
 			modify=IDENTITY[0]
 		else:
 			modify=IDENTITY[1]
+		
+		if 'result' not in response.keys():
+			raise FreebaseError('Freebase error: FREEBASE_RESPONSE_ERROR')
+
 		for planet in response['result']:
+			if (confine_word not in planet.keys()) or ('name' not in planet.keys()):
+				continue
 			for anb in planet[confine_word]:
 				if planet['name']+modify in bus_dict.keys():
 					bus_dict[planet['name']+modify].append(anb['a:name'])

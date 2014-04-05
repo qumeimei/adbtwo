@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import json
+
 # map freebase type to project type
 FREEBASEMAP = {
 	'/people/person': 'PERSON',
@@ -40,7 +42,7 @@ def getContent(propmap, first, seconds = None, field = 'text'):
 # debug function
 def dump(x):
 	print '#' * 100
-	print x
+	print json.dumps(x, indent=4)
 	print '#' * 100
 
 # format line: sing line or multiple line
