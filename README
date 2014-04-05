@@ -185,7 +185,7 @@ this information.
 
 Internal Design(Part 2)
 ---------------
-* Extract Value 
+* Search 
 We use MQLRead API to send MQL queries to Freebase. In the question of "Who created [x]".
 We defined the queries separately as followings:
 
@@ -230,6 +230,12 @@ The following is the table we used to map from Freebase properties to the entiti
 | BusinessPerson.Founded| /organization/organization_founder						| All "a:name" tags from the	|
 |						|															| array of values were used 	|
  -------------------------------------------------------------------------------------------------------------------
+
+ * Format String
+The result output was finally formatted as tables with three columns. The total width of the table is 105 characters. 
+The width of the first column was defined as as the maximal length of author names. Both width of second and third
+columns were set as (105-length(first_colum))/2. In this way, the  width of first column will be automatically adjusted 
+according to different input author name.
 
 
 Freebase API Key and Limit
