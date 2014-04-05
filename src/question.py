@@ -57,22 +57,25 @@ class Question:
 		question = 'Who created ' + content + '?'
 		strd=self.pl(sll,1)
 		strd +='	|'+' '*((sll-len(question))/2)+ question +' '*(sll-(sll-len(question))/2-len(question))+'|'+'\n'
-
+	
 		word_max=0
 		names=[]
 		for key in sorted(dict2.iterkeys()):
 			key1 = ' '.join(key.split()[0:len(key.split())-3])
 			word_max=max(word_max, len(key1))
 			names.append(key1)
+	
 		#print "word_max is: %d " %(word_max)
 		
+			
 		x=0
 		for key in sorted(dict2.iterkeys()):
 			key1 = ' '.join(key.split()[0:len(key.split())-3])
 			typ = ' '.join(key.split()[len(key.split())-2:len(key.split())-1])
 			typ = typ[:-1]
 			
-			if key1==names[x-1]:
+		
+			if key1==names[x-1] and len(names)!=1:
 				y=1
 				for num in dict2[key]:
 					if y==1:
@@ -109,6 +112,7 @@ class Question:
 		}
 		url = service_url + '?' + urllib.urlencode(params)
 		response = json.loads(urllib.urlopen(url).read())
+		
 
 		if len(bus_dict)==0:
 			modify=IDENTITY[0]
@@ -126,6 +130,7 @@ class Question:
 					bus_dict[planet['name']+modify].append(anb['a:name'])
 				else:
 					bus_dict[planet['name']+modify]=[anb['a:name']]
+		
 		return bus_dict
 
 	def pl(self,lenthofline,num_tab):
