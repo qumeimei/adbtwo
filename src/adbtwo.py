@@ -34,12 +34,19 @@ if args.t is None:
 	print '| ' + len2 + ' ' * (max_len - len(len2)) + '|'
 	print '| ' + len3 + ' ' * (max_len - len(len3)) + '|'
 	print ' ' + '-' * (max_len + 1)
+	print ''
 	try:
 		while True:
-			print ''
 			prompt = '[' + time.strftime('%H:%M:%S', time.localtime()) + '] ' + os.getlogin() + '@' + socket.gethostname() + '> '
 			query = raw_input(prompt)
-			if re.match('^who created .*', query.lower()) is None:
+			query = query.strip()
+			if not query:
+				continue
+			# re.match: match the pattern from the beginning of the string
+			if re.match('.*[a-zA-Z0-9]+', query) is None:
+				print 'Unknown expected answer type. Something is wrong here!'
+				continue
+			if re.match('who created .*', query.lower()) is None:
 				info.run(query)
 			else:
 				ques.run(query)

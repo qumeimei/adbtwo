@@ -66,7 +66,6 @@ class Question:
 			names.append(key1)
 	
 		#print "word_max is: %d " %(word_max)
-		
 			
 		x=0
 		for key in sorted(dict2.iterkeys()):
@@ -112,7 +111,6 @@ class Question:
 		}
 		url = service_url + '?' + urllib.urlencode(params)
 		response = json.loads(urllib.urlopen(url).read())
-		
 
 		if len(bus_dict)==0:
 			modify=IDENTITY[0]
@@ -126,6 +124,8 @@ class Question:
 			if (confine_word not in planet.keys()) or ('name' not in planet.keys()):
 				continue
 			for anb in planet[confine_word]:
+				if planet['name'] is None:
+					continue
 				if planet['name']+modify in bus_dict.keys():
 					bus_dict[planet['name']+modify].append(anb['a:name'])
 				else:
